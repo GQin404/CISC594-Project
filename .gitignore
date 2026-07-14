@@ -1,0 +1,21 @@
+﻿__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+.vscode/
+*.log
+data/fixtures/_tmp_*.csv
+.DS_Store
+Thumbs.db
+
+# Submission binaries / separate Canvas deliverables live outside this repository
+Project Proposal.docx
+Project Proposal.pdf
+Risk Management Report.md
+Risk Management Report.docx
