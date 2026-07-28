@@ -21,3 +21,4 @@ Version 2 will add dual-policy portfolio comparison, change attribution, and imp
 
 ## Documents
 - `Project Proposal.md`
+- `docs/CHANGE_CONTROL.md` — branch, pull-request, and release process
