@@ -1,0 +1,8 @@
+claim_id,payer,service_date,submission_date,procedure_code,diagnosis_code,modifier,place_of_service,authorization_on_file
+C001,Acme Health,2026-01-10,2026-01-20,99213,J06.9,,11,true
+C002,Acme Health,2026-01-10,2026-04-15,99213,J06.9,,11,true
+C003,Acme Health,2026-01-10,2026-01-12,27447,M17.11,,11,false
+C004,Acme Health,2026-01-10,2026-01-12,27447,M17.11,LT,11,true
+C005,Other Payer,2026-01-10,2026-01-12,99213,J06.9,,11,true
+C006,Acme Health,2026-01-10,2026-03-26,99213,J06.9,,11,true
+C007,Acme Health,2026-01-10,2026-01-15,99214,J02.9,,22,true
