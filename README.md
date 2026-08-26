@@ -12,13 +12,22 @@ pip install -r requirements.txt
 pytest
 ```
 
-## Version 1 scope
-- Structured policy validation
-- Synthetic claim import
-- Single-policy evaluation with explanations, summaries, and CSV export
+## Versions
+- **v1.0** (this baseline) — policy validation, claim import, single-policy evaluation, explanations, summaries, CSV export
+- **v2.0** (planned) — dual-policy portfolio replay, change detection, rule-level attribution, impact summaries
 
-Version 2 will add dual-policy portfolio comparison, change attribution, and impact summaries.
+## Testing
+```bash
+pytest                                 # unit tests
+set PYTHONPATH=src
+python scripts/run_v1_system_tests.py  # Version 1 system-test pack
+```
+
+## Change control
+Development happens on feature branches and is merged to `main` through pull requests. See `docs/CHANGE_CONTROL.md`.
 
 ## Documents
 - `Project Proposal.md`
-- `docs/CHANGE_CONTROL.md` — branch, pull-request, and release process
+- `docs/CHANGE_CONTROL.md`
+- `docs/CHANGE_REQUESTS.md`
+- `docs/V1_SYSTEM_TEST_EVIDENCE.md`
