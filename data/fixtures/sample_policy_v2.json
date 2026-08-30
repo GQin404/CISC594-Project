@@ -1,0 +1,43 @@
+{
+  "policy_id": "POL-ACME-AUTH-001",
+  "payer_name": "Acme Health",
+  "version": "2.0",
+  "effective_start": "2026-01-01",
+  "effective_end": "2026-12-31",
+  "rules": [
+    {
+      "rule_id": "R-TF-90",
+      "category": "timely_filing",
+      "description": "Claims must be filed within 60 days of service",
+      "timely_filing_days": 60,
+      "on_match_outcome": "fail",
+      "priority": 10
+    },
+    {
+      "rule_id": "R-AUTH-27447",
+      "category": "authorization",
+      "description": "Procedure 27447 requires prior authorization",
+      "procedure_code": "27447",
+      "authorization_required": true,
+      "on_match_outcome": "fail",
+      "priority": 20
+    },
+    {
+      "rule_id": "R-MOD-27447-LT",
+      "category": "modifier",
+      "description": "Procedure 27447 requires LT modifier",
+      "procedure_code": "27447",
+      "modifier_required": "LT",
+      "on_match_outcome": "fail",
+      "priority": 30
+    },
+    {
+      "rule_id": "R-POS-22",
+      "category": "place_of_service",
+      "description": "Office claims at POS 22 require manual review",
+      "place_of_service": "22",
+      "on_match_outcome": "manual_review",
+      "priority": 5
+    }
+  ]
+}
