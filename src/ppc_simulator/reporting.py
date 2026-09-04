@@ -32,7 +32,7 @@ def summarize_results(results: list[EvaluationResult]) -> ResultSummary:
         if result.outcome == Outcome.PASS:
             continue
         for trace in result.traces:
-            if trace.matched:
+            if trace.matched or not trace.evaluable:
                 rule_counts[trace.rule_id] = rule_counts.get(trace.rule_id, 0) + 1
                 break
 
@@ -52,7 +52,7 @@ EXPORT_COLUMNS = ["claim_id", "policy_id", "policy_version", "outcome", "decidin
 
 def _deciding_rule(result: EvaluationResult) -> str:
     for trace in result.traces:
-        if trace.matched:
+        if trace.matched or not trace.evaluable:
             return trace.rule_id
     return ""
 
