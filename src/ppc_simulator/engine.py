@@ -58,6 +58,7 @@ def _evaluate_rule(rule: Rule, claim: Claim) -> RuleTrace:
         rule_id=rule.rule_id,
         category=rule.category,
         matched=False,
+        evaluable=False,
         explanation=(
             f"Rule {rule.rule_id} is incomplete for category {rule.category.value}; "
             "the claim cannot be decided automatically and requires manual review."
@@ -101,9 +102,11 @@ def evaluate_claim(policy: Policy, claim: Claim) -> EvaluationResult:
     for rule in ordered:
         trace = _evaluate_rule(rule, claim)
         traces.append(trace)
+        if not trace.evaluable:
+            explanations.append(trace.explanation)
+            outcome = Outcome.MANUAL_REVIEW
+            break
         if not trace.matched:
-            if "incomplete for category" in trace.explanation:
-                explanations.append(trace.explanation)
             continue
         explanations.append(trace.explanation)
         if rule.on_match_outcome == Outcome.MANUAL_REVIEW:
