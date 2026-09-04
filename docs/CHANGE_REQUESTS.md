@@ -12,15 +12,15 @@ Scope changes against the approved project proposal are recorded here before imp
 
 **Impact:** Schedule reduced (mitigates R4). No requirement lost. Test scope unchanged: fixtures remain the test oracle. SQLAlchemy is not added to `requirements.txt`.
 
-## CR-002 — Deliver the workflow as an HTTP API instead of a browser UI
-**Requested:** Week 6 (Version 1 system-test prep)  
+## CR-002 — Deliver a FastAPI browser UI plus JSON API
+**Requested:** Week 6 (Version 1 system-test prep); implemented with Version 2  
 **Status:** Approved and implemented
 
-**Change:** The proposal described a browser-based application. The same workflows will be exposed through FastAPI endpoints (`/v1/evaluate`, `/v1/evaluate/export`, `/v2/compare`) instead of a browser UI.
+**Change:** The proposal described a browser-based FastAPI application. Version 1 stays a tested library. Version 2 serves a small browser UI from the same FastAPI process (`/` for evaluate and compare) and keeps JSON endpoints (`/v1/evaluate`, `/v1/evaluate/export`, `/v2/compare`) so system tests can run without a browser. There is no separate frontend framework.
 
-**Reason:** Risk R4 (schedule) is mitigated by removing non-essential UI work. The rubric rewards system behavior and testing depth, not presentation.
+**Reason:** Risk R4 (schedule) is mitigated by avoiding a standalone SPA and SQLite-backed screens. The rubric rewards system behavior and testing depth. Hosting the UI on FastAPI still matches the proposed browser-based delivery.
 
-**Impact:** Schedule reduced. System tests can exercise the API directly, which is more repeatable than UI testing. Version 1 remains complete as a library plus system-test pack; the HTTP surface is delivered with Version 2.
+**Impact:** Users can run the V1 and V2 workflows in the browser. Automated tests continue to call the JSON API, which is more repeatable than UI-driver tests.
 
 ## CR-003 — Force manual review for incompletely configured rules
 **Requested:** Week 9 (Version 2 system testing)  
