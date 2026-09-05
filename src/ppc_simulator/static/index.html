@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payer Policy Change Impact Simulator</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="kicker">CISC 594 · RCM simulation</p>
+      <h1>Payer Policy Change Impact Simulator</h1>
+    </div>
+    <p class="lede">Load a structured policy and a synthetic claim file, then see pass / fail / manual-review outcomes with explanations. Version 2 replays the same portfolio against a proposed policy and names the rules that caused each change.</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab is-active" data-tab="evaluate" role="tab" aria-selected="true">Version 1 · Evaluate</button>
+    <button type="button" class="tab" data-tab="compare" role="tab" aria-selected="false">Version 2 · Compare</button>
+  </nav>
+
+  <main>
+    <section id="panel-evaluate" class="panel is-active">
+      <form id="evaluate-form" class="grid">
+        <label>
+          Policy JSON
+          <textarea id="eval-policy" rows="12" required placeholder="Paste policy JSON or load the sample."></textarea>
+        </label>
+        <label>
+          Claims CSV
+          <textarea id="eval-claims" rows="12" required placeholder="Paste claims CSV or load the sample."></textarea>
+        </label>
+        <div class="actions">
+          <button type="button" id="eval-sample" class="secondary">Load V1 sample fixtures</button>
+          <button type="submit">Run evaluation</button>
+          <button type="button" id="eval-export" class="secondary" disabled>Download CSV</button>
+        </div>
+      </form>
+      <p id="eval-error" class="error" hidden></p>
+      <div id="eval-summary" class="summary" hidden></div>
+      <div class="table-wrap">
+        <table id="eval-table" hidden>
+          <thead>
+            <tr>
+              <th>Claim</th>
+              <th>Outcome</th>
+              <th>Deciding rule</th>
+              <th>Explanation</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="panel-compare" class="panel">
+      <form id="compare-form" class="grid grid-3">
+        <label>
+          Baseline policy JSON
+          <textarea id="cmp-baseline" rows="10" required></textarea>
+        </label>
+        <label>
+          Proposed policy JSON
+          <textarea id="cmp-proposed" rows="10" required></textarea>
+        </label>
+        <label>
+          Claims CSV
+          <textarea id="cmp-claims" rows="10" required></textarea>
+        </label>
+        <div class="actions">
+          <button type="button" id="cmp-sample" class="secondary">Load V1/V2 sample fixtures</button>
+          <button type="submit">Run comparison</button>
+        </div>
+      </form>
+      <p id="cmp-error" class="error" hidden></p>
+      <div id="cmp-summary" class="summary" hidden></div>
+      <div class="table-wrap">
+        <table id="cmp-table" hidden>
+          <thead>
+            <tr>
+              <th>Claim</th>
+              <th>Baseline</th>
+              <th>Proposed</th>
+              <th>Changed</th>
+              <th>Attributed rules</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
