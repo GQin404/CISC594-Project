@@ -263,6 +263,34 @@ def main() -> None:
         f"outcome={precedence_result.outcome.value}, first_trace={precedence_result.traces[0].rule_id}",
     )
 
+    # --- Incomplete rule definition ----------------------------------------
+    incomplete_policy = Policy.model_validate(
+        {
+            "policy_id": "POL-INCOMPLETE",
+            "payer_name": "Acme Health",
+            "version": "1.0",
+            "effective_start": "2026-01-01",
+            "effective_end": "2026-12-31",
+            "rules": [
+                {
+                    "rule_id": "R-INCOMPLETE",
+                    "category": "modifier",
+                    "description": "Modifier rule with no required modifier configured",
+                    "on_match_outcome": "fail",
+                    "priority": 10,
+                }
+            ],
+        }
+    )
+    incomplete_result = evaluate_claim(incomplete_policy, by_id["C001"])
+    record(
+        "V1-14",
+        "Incomplete rule definition forces manual review instead of a silent pass",
+        incomplete_result.outcome == Outcome.MANUAL_REVIEW,
+        f"outcome={incomplete_result.outcome.value}, "
+        f"evaluable={[t.evaluable for t in incomplete_result.traces]}",
+    )
+
     # --- Explanations, summary, export -------------------------------------
     results = evaluate_portfolio(policy, claims)
     record(
