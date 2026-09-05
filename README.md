@@ -29,10 +29,10 @@ Then open http://127.0.0.1:8000 for the browser UI (Evaluate and Compare). API d
 
 ## Testing
 ```bash
-pytest                                 # 18 unit and integration tests
+pytest                                 # 17 unit and integration tests
 set PYTHONPATH=src
 python scripts/run_v1_system_tests.py  # 18 V1 system-test checks (17 on the v1.0 tag)
-python scripts/run_system_tests.py     # 16 V2 system-test checks
+python scripts/run_system_tests.py     # 17 V2 system-test checks
 ```
 Each script writes its own evidence file under `docs/`. The `v1.0` tag contains the 17-check pack used as the Version 1 release gate. After CR-003, `main` adds V1-14 (incomplete rules), for 18 checks.
 
