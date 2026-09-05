@@ -1,7 +1,7 @@
 # V1 System Test Evidence
 
 **Execution date:** 2026-09-05
-**Build under test:** `v1.0-3-g3191816` (Version 1 baseline)
+**Build under test:** Version 2 release candidate after CR-003
 **Result:** 18/18 checks passed
 
 This pack exercises Version 1 capabilities only, so it can be executed against the
