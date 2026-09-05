@@ -81,6 +81,31 @@ def test_portfolio_summary_counts(policy, claims):
     assert len(results) == 7
 
 
+def test_incomplete_rule_forces_manual_review():
+    policy = Policy.model_validate(
+        {
+            "policy_id": "POL-INCOMPLETE",
+            "payer_name": "Acme Health",
+            "version": "1.0",
+            "effective_start": "2026-01-01",
+            "effective_end": "2026-12-31",
+            "rules": [
+                {
+                    "rule_id": "R-INCOMPLETE",
+                    "category": "modifier",
+                    "description": "Modifier rule with no required modifier configured",
+                    "on_match_outcome": "fail",
+                    "priority": 10,
+                }
+            ],
+        }
+    )
+    claim = load_claims_csv(FIXTURES / "sample_claims.csv")[0]
+    result = evaluate_claim(policy, claim)
+    assert result.outcome == Outcome.MANUAL_REVIEW
+    assert any(t.rule_id == "R-INCOMPLETE" and not t.evaluable for t in result.traces)
+
+
 def test_result_summary_counts_and_failure_reasons(policy, claims):
     summary = summarize_results(evaluate_portfolio(policy, claims))
     assert summary.total_claims == 7

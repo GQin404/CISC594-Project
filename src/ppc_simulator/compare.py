@@ -24,13 +24,13 @@ def deciding_rule_id(result: EvaluationResult) -> str | None:
     if result.outcome == Outcome.PASS:
         return None
     for trace in result.traces:
-        if trace.matched:
+        if trace.matched or not trace.evaluable:
             return trace.rule_id
     return None
 
 
 def _matched_rule_ids(result: EvaluationResult) -> set[str]:
-    return {trace.rule_id for trace in result.traces if trace.matched}
+    return {trace.rule_id for trace in result.traces if trace.matched or not trace.evaluable}
 
 
 def attribute_change(
