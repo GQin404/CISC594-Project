@@ -77,6 +77,9 @@ class RuleTrace(BaseModel):
     category: RuleCategory
     matched: bool
     explanation: str
+    # False when the rule definition is incomplete for its category and the
+    # engine cannot decide the claim; such rules force manual review.
+    evaluable: bool = True
 
 
 class EvaluationResult(BaseModel):
