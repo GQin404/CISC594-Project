@@ -1,8 +1,8 @@
 # V1 System Test Evidence
 
-**Execution date:** 2026-08-25
-**Build under test:** `fec3e12` (Version 1 baseline)
-**Result:** 17/17 checks passed
+**Execution date:** 2026-09-05
+**Build under test:** `v1.0-3-g3191816` (Version 1 baseline)
+**Result:** 18/18 checks passed
 
 This pack exercises Version 1 capabilities only, so it can be executed against the
 `v1.0` release with no Version 2 code present.
@@ -22,6 +22,7 @@ This pack exercises Version 1 capabilities only, so it can be executed against t
 | V1-11 | Claim for a different payer routes to manual review | PASS | `outcome=manual_review` |
 | V1-12 | Service date outside the policy effective range routes to manual review | PASS | `outcome=manual_review, explanation=Service date 2025-06-01 is outside policy effective range 20...` |
 | V1-13 | Lower priority number decides the outcome first | PASS | `outcome=manual_review, first_trace=R-HIGH-PRIORITY` |
+| V1-14 | Incomplete rule definition forces manual review instead of a silent pass | PASS | `outcome=manual_review, evaluable=[False]` |
 | V1-15 | Every evaluated claim carries at least one explanation | PASS | `claims=7, min_explanations=1` |
 | V1-16 | Summary reports outcome counts and failure reasons | PASS | `counts={'pass': 4, 'fail': 2, 'manual_review': 1}, reasons=[('R-AUTH-27447', 1), ('R-TF-90', 1)]` |
 | V1-17 | Claim-level results export to CSV with a header row | PASS | `header=claim_id,policy_id,policy_version,outcome,deciding_rule,explanation, rows=7` |
