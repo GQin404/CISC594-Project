@@ -28,6 +28,8 @@ Scope changes against the approved project proposal are recorded here before imp
 
 **Change:** A rule whose definition is incomplete for its category (for example a modifier rule with no required modifier) previously produced an explanation saying manual review was required while the claim still returned `pass`. The engine now marks such traces `evaluable=False` and returns `manual_review`.
 
-**Reason:** Defect found during Version 2 testing (risk R9). The explanation and the outcome contradicted each other, which breaks the system's core promise of explainable, trustworthy results.
+The proposal said incomplete conditions would be rejected before a policy was saved. That reject-at-save check is not implemented. Incomplete rules remain loadable so analysts can see which definition is unfinished; the engine refuses to auto-pass the claim.
+
+**Reason:** Defect found during Version 2 testing (risk R9). The explanation and the outcome contradicted each other, which breaks the system's core promise of explainable, trustworthy results. Rejecting the whole policy would hide that signal behind a validation error.
 
 **Impact:** Behavior change in the Version 1 evaluation engine, carried into Version 2 comparison and attribution. Covered by unit test `test_incomplete_rule_forces_manual_review`, V1 system test V1-14, and V2 system test ST15.
