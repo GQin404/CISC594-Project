@@ -33,3 +33,13 @@ The proposal said incomplete conditions would be rejected before a policy was sa
 **Reason:** Defect found during Version 2 testing (risk R9). The explanation and the outcome contradicted each other, which breaks the system's core promise of explainable, trustworthy results. Rejecting the whole policy would hide that signal behind a validation error.
 
 **Impact:** Behavior change in the Version 1 evaluation engine, carried into Version 2 comparison and attribution. Covered by unit test `test_incomplete_rule_forces_manual_review`, V1 system test V1-14, and V2 system test ST15.
+
+## CR-004 — Make an explicit pass rule terminal
+**Requested:** Project closeout review, after `v2.0`
+**Status:** Approved and implemented on the current working baseline
+
+**Change:** A matching rule with `on_match_outcome="pass"` now decides the claim immediately according to priority order. Previously, evaluation continued and a lower-priority fail or manual-review rule could override that explicit pass.
+
+**Reason:** The rule model permits pass, fail, and manual-review outcomes, and the documented precedence rule says the first matching rule decides the result. The previous handling was inconsistent with those semantics.
+
+**Impact:** This is a post-release correction on `main`; the `v1.0` and `v2.0` tags remain unchanged. The regression test `test_higher_priority_pass_rule_decides_before_lower_priority_failure` covers the behavior. Both system-test packs are re-run to check for regressions.

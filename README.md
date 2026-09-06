@@ -30,15 +30,15 @@ Then open http://127.0.0.1:8000 for the browser UI (Evaluate and Compare). API d
 
 ## Testing
 ```bash
-pytest                                 # 36 unit and integration tests
+pytest                                 # 37 unit and integration tests
 set PYTHONPATH=src
 python scripts/run_v1_system_tests.py  # 18 V1 system-test checks (17 on the v1.0 tag)
 python scripts/run_system_tests.py     # 17 V2 system-test checks
 ```
-The `v1.0` tag contains the 17-check pack used as the Version 1 release gate. After CR-003, `main` adds V1-14 (incomplete rules), for 18 checks. The `v2.0` tag is the Version 2 release gate (`pytest` 18; V2 pack 17/17). After that tag, PR #12 (`feat/ui-closeout`) added UI proposal alignment and extra tests (`pytest` 36 on `main`).
+The `v1.0` tag contains the 17-check pack used as the Version 1 release gate. After CR-003, `main` adds V1-14 (incomplete rules), for 18 checks. The corrected `v2.0` tag is the Version 2 release gate (`pytest` 17; V1 pack 18/18; V2 pack 17/17). After that tag, PR #12 added UI proposal alignment and extra tests, PR #13 clarified unknown subset IDs, and CR-004 made explicit pass rules terminal by priority (`pytest` 37 on the current branch).
 
 ## Change control
-All development happens on feature branches and enters `main` through pull requests. Releases are annotated tags `v1.0` and `v2.0`. After `v2.0`, PR #12 updated `main` without a new version tag. See `docs/CHANGE_CONTROL.md`.
+All development happens on feature branches and enters `main` through pull requests. Releases are annotated tags `v1.0` and `v2.0`. Changes after `v2.0` update the working baseline without creating a third version tag. See `docs/CHANGE_CONTROL.md`.
 
 ## Repository documents
 - `Project Proposal.md` (Markdown only; submission binaries are outside this repo)
