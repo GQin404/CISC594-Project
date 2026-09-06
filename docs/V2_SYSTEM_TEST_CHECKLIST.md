@@ -1,7 +1,7 @@
 # V2 System Test Checklist
 
 ## Preconditions
-- [x] V1 regression suite green (`pytest` — 17 passed)
+- [x] V1 regression suite green (`pytest` — 18 passed)
 - [x] Fixtures present: `sample_policy_v1.json`, `sample_policy_v2.json`, `sample_claims.csv`
 - [x] Change-control notes current (`docs/CHANGE_CONTROL.md`, `docs/CHANGE_REQUESTS.md`)
 

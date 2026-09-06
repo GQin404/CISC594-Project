@@ -1,0 +1,79 @@
+[
+  {
+    "claim_id": "C001",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-01-20",
+    "procedure_code": "99213",
+    "diagnosis_code": "J06.9",
+    "modifier": null,
+    "place_of_service": "11",
+    "authorization_on_file": true
+  },
+  {
+    "claim_id": "C002",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-04-15",
+    "procedure_code": "99213",
+    "diagnosis_code": "J06.9",
+    "modifier": null,
+    "place_of_service": "11",
+    "authorization_on_file": true
+  },
+  {
+    "claim_id": "C003",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-01-12",
+    "procedure_code": "27447",
+    "diagnosis_code": "M17.11",
+    "modifier": null,
+    "place_of_service": "11",
+    "authorization_on_file": false
+  },
+  {
+    "claim_id": "C004",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-01-12",
+    "procedure_code": "27447",
+    "diagnosis_code": "M17.11",
+    "modifier": "LT",
+    "place_of_service": "11",
+    "authorization_on_file": true
+  },
+  {
+    "claim_id": "C005",
+    "payer": "Other Payer",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-01-12",
+    "procedure_code": "99213",
+    "diagnosis_code": "J06.9",
+    "modifier": null,
+    "place_of_service": "11",
+    "authorization_on_file": true
+  },
+  {
+    "claim_id": "C006",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-03-26",
+    "procedure_code": "99213",
+    "diagnosis_code": "J06.9",
+    "modifier": null,
+    "place_of_service": "11",
+    "authorization_on_file": true
+  },
+  {
+    "claim_id": "C007",
+    "payer": "Acme Health",
+    "service_date": "2026-01-10",
+    "submission_date": "2026-01-15",
+    "procedure_code": "99214",
+    "diagnosis_code": "J02.9",
+    "modifier": null,
+    "place_of_service": "22",
+    "authorization_on_file": true
+  }
+]

@@ -2,6 +2,15 @@ function $(id) {
   return document.getElementById(id);
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function parseClaimsCsv(text) {
   const lines = text.replace(/^\uFEFF/, "").trim().split(/\r?\n/);
   if (lines.length < 2) {
@@ -42,12 +51,50 @@ function parseClaimsCsv(text) {
   });
 }
 
+function parseClaims(text) {
+  const trimmed = text.replace(/^\uFEFF/, "").trim();
+  if (!trimmed) {
+    throw new Error("Paste claims as CSV or as a JSON array.");
+  }
+  if (trimmed.startsWith("[")) {
+    const parsed = JSON.parse(trimmed);
+    if (!Array.isArray(parsed) || parsed.length < 1) {
+      throw new Error("Claims JSON must be a non-empty array.");
+    }
+    return parsed;
+  }
+  return parseClaimsCsv(trimmed);
+}
+
+function applySubset(claims, raw) {
+  const ids = (raw || "")
+    .split(/[\s,]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (!ids.length) {
+    return claims;
+  }
+  const wanted = new Set(ids);
+  const selected = claims.filter((claim) => wanted.has(claim.claim_id));
+  const found = new Set(selected.map((claim) => claim.claim_id));
+  const missing = ids.filter((id) => !found.has(id));
+  if (missing.length) {
+    throw new Error(`Unknown claim IDs in subset: ${missing.join(", ")}`);
+  }
+  return selected;
+}
+
 function parsePolicy(text) {
   return JSON.parse(text);
 }
 
 function badge(outcome) {
-  return `<span class="badge ${outcome}">${outcome.replace("_", " ")}</span>`;
+  const safe = escapeHtml(outcome);
+  return `<span class="badge ${safe}">${safe.replace("_", " ")}</span>`;
+}
+
+function chip(text) {
+  return `<span class="chip">${escapeHtml(text)}</span>`;
 }
 
 function showError(node, err) {
@@ -111,6 +158,16 @@ $("eval-sample").addEventListener("click", async () => {
   $("eval-claims").value = claims;
 });
 
+$("eval-sample-json").addEventListener("click", async () => {
+  hideError($("eval-error"));
+  const [policy, claims] = await Promise.all([
+    fetch("/fixtures/sample_policy_v1.json").then((r) => r.text()),
+    fetch("/fixtures/sample_claims.json").then((r) => r.text()),
+  ]);
+  $("eval-policy").value = policy;
+  $("eval-claims").value = claims;
+});
+
 $("cmp-sample").addEventListener("click", async () => {
   hideError($("cmp-error"));
   const [baseline, proposed, claims] = await Promise.all([
@@ -123,32 +180,48 @@ $("cmp-sample").addEventListener("click", async () => {
   $("cmp-claims").value = claims;
 });
 
+$("cmp-sample-json").addEventListener("click", async () => {
+  hideError($("cmp-error"));
+  const [baseline, proposed, claims] = await Promise.all([
+    fetch("/fixtures/sample_policy_v1.json").then((r) => r.text()),
+    fetch("/fixtures/sample_policy_v2.json").then((r) => r.text()),
+    fetch("/fixtures/sample_claims.json").then((r) => r.text()),
+  ]);
+  $("cmp-baseline").value = baseline;
+  $("cmp-proposed").value = proposed;
+  $("cmp-claims").value = claims;
+});
+
 $("evaluate-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   hideError($("eval-error"));
   try {
     const payload = {
       policy: parsePolicy($("eval-policy").value),
-      claims: parseClaimsCsv($("eval-claims").value),
+      claims: applySubset(parseClaims($("eval-claims").value), $("eval-subset").value),
     };
     const data = await postJson("/v1/evaluate", payload);
     const counts = data.summary.outcome_counts;
+    const reasons = (data.summary.failure_reasons || [])
+      .map((item) => `${item.rule_id} (${item.claim_count})`)
+      .join(", ");
     $("eval-summary").hidden = false;
     $("eval-summary").innerHTML = [
-      `<span class="chip">Claims ${data.summary.total_claims}</span>`,
-      `<span class="chip">Pass ${counts.pass || 0}</span>`,
-      `<span class="chip">Fail ${counts.fail || 0}</span>`,
-      `<span class="chip">Manual review ${counts.manual_review || 0}</span>`,
+      chip(`Claims ${data.summary.total_claims}`),
+      chip(`Pass ${counts.pass || 0}`),
+      chip(`Fail ${counts.fail || 0}`),
+      chip(`Manual review ${counts.manual_review || 0}`),
+      chip(`Failure reasons ${reasons || "none"}`),
     ].join("");
     const body = $("eval-table").querySelector("tbody");
     body.innerHTML = data.results
       .map((row) => {
         const deciding = (row.traces || []).find((trace) => trace.matched || trace.evaluable === false);
         return `<tr>
-          <td>${row.claim_id}</td>
+          <td>${escapeHtml(row.claim_id)}</td>
           <td>${badge(row.outcome)}</td>
-          <td>${deciding ? deciding.rule_id : ""}</td>
-          <td>${(row.explanations || []).join(" ")}</td>
+          <td>${escapeHtml(deciding ? deciding.rule_id : "")}</td>
+          <td>${escapeHtml((row.explanations || []).join(" "))}</td>
         </tr>`;
       })
       .join("");
@@ -184,26 +257,29 @@ $("compare-form").addEventListener("submit", async (event) => {
     const data = await postJson("/v2/compare", {
       baseline: parsePolicy($("cmp-baseline").value),
       proposed: parsePolicy($("cmp-proposed").value),
-      claims: parseClaimsCsv($("cmp-claims").value),
+      claims: applySubset(parseClaims($("cmp-claims").value), $("cmp-subset").value),
     });
     const impacts = (data.rule_impacts || [])
-      .map((item) => `${item.rule_id} (${item.affected_claim_count})`)
-      .join(", ");
+      .map(
+        (item) =>
+          `${item.rule_id} (${item.affected_claim_count}, ${item.percent_of_portfolio}% of portfolio, ${item.percent_of_changes}% of changes)`,
+      )
+      .join("; ");
     $("cmp-summary").hidden = false;
     $("cmp-summary").innerHTML = [
-      `<span class="chip">Changed ${data.changed_claims}</span>`,
-      `<span class="chip">Unchanged ${data.unchanged_claims}</span>`,
-      `<span class="chip">Impacts ${impacts || "none"}</span>`,
+      chip(`Changed ${data.changed_claims}`),
+      chip(`Unchanged ${data.unchanged_claims}`),
+      chip(`Impacts ${impacts || "none"}`),
     ].join("");
     const body = $("cmp-table").querySelector("tbody");
     body.innerHTML = data.comparisons
       .map(
         (row) => `<tr>
-          <td>${row.claim_id}</td>
+          <td>${escapeHtml(row.claim_id)}</td>
           <td>${badge(row.baseline_outcome)}</td>
           <td>${badge(row.proposed_outcome)}</td>
           <td>${row.changed ? "yes" : "no"}</td>
-          <td>${(row.attributed_rule_ids || []).join(", ")}</td>
+          <td>${escapeHtml((row.attributed_rule_ids || []).join(", "))}</td>
         </tr>`,
       )
       .join("");
