@@ -76,6 +76,7 @@ def test_ui_static_assets_load():
     assert "escapeHtml(" in js.text
     assert "parseClaims(" in js.text
     assert "applySubset(" in js.text
+    assert "Leave this field blank to include every loaded claim" in js.text
     assert "failure_reasons" in js.text
     assert "percent_of_portfolio" in js.text
     assert "eval-sample" in home.text

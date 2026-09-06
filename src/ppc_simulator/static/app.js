@@ -74,12 +74,26 @@ function applySubset(claims, raw) {
   if (!ids.length) {
     return claims;
   }
-  const wanted = new Set(ids);
-  const selected = claims.filter((claim) => wanted.has(claim.claim_id));
-  const found = new Set(selected.map((claim) => claim.claim_id));
-  const missing = ids.filter((id) => !found.has(id));
+  const byId = new Map();
+  for (const claim of claims) {
+    byId.set(String(claim.claim_id).toLowerCase(), claim);
+  }
+  const selected = [];
+  const missing = [];
+  for (const id of ids) {
+    const match = byId.get(id.toLowerCase());
+    if (match) {
+      selected.push(match);
+    } else {
+      missing.push(id);
+    }
+  }
   if (missing.length) {
-    throw new Error(`Unknown claim IDs in subset: ${missing.join(", ")}`);
+    const available = claims.map((claim) => claim.claim_id).join(", ") || "(none loaded)";
+    throw new Error(
+      `Unknown claim IDs in subset: ${missing.join(", ")}. ` +
+        `Loaded claims are ${available}. Leave this field blank to include every loaded claim.`,
+    );
   }
   return selected;
 }
@@ -229,6 +243,8 @@ $("evaluate-form").addEventListener("submit", async (event) => {
     $("eval-export").disabled = false;
     $("eval-export").dataset.payload = JSON.stringify(payload);
   } catch (err) {
+    $("eval-summary").hidden = true;
+    $("eval-table").hidden = true;
     showError($("eval-error"), err);
   }
 });
@@ -285,6 +301,8 @@ $("compare-form").addEventListener("submit", async (event) => {
       .join("");
     $("cmp-table").hidden = false;
   } catch (err) {
+    $("cmp-summary").hidden = true;
+    $("cmp-table").hidden = true;
     showError($("cmp-error"), err);
   }
 });
