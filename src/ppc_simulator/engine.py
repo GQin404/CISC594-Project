@@ -109,6 +109,9 @@ def evaluate_claim(policy: Policy, claim: Claim) -> EvaluationResult:
         if not trace.matched:
             continue
         explanations.append(trace.explanation)
+        if rule.on_match_outcome == Outcome.PASS:
+            outcome = Outcome.PASS
+            break
         if rule.on_match_outcome == Outcome.MANUAL_REVIEW:
             outcome = Outcome.MANUAL_REVIEW
             break

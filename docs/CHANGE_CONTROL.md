@@ -18,6 +18,16 @@
 
 Because this is a single-developer project, the author also performs the PR review against the checklist. The PR is still a formal gate: work stays off `main` until tests are recorded and the merge is explicit.
 
+## Change-request states
+- **Proposed:** The requirement, defect, reason, and expected impact have been recorded.
+- **Approved:** The change is accepted for implementation after scope, schedule, risk, design, and test effects are reviewed.
+- **In progress:** Work is isolated on a named branch and its tests are being developed.
+- **Verified:** Applicable automated and system tests pass and the pull-request checklist is complete.
+- **Implemented:** The verified pull request is merged into the current working baseline.
+- **Deferred or rejected:** The request is retained in the log with the reason it will not enter the current baseline.
+
+For this single-student project, approval and review are self-review steps. `CHANGE_REQUESTS.md` records the final status and evidence for each request.
+
 ## Pull-request review checklist
 - Unit tests that exist at this milestone (`pytest`) pass
 - Change is limited to one coherent purpose

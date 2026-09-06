@@ -106,6 +106,40 @@ def test_incomplete_rule_forces_manual_review():
     assert any(t.rule_id == "R-INCOMPLETE" and not t.evaluable for t in result.traces)
 
 
+def test_higher_priority_pass_rule_decides_before_lower_priority_failure():
+    policy = Policy.model_validate(
+        {
+            "policy_id": "POL-PASS-FIRST",
+            "payer_name": "Acme Health",
+            "version": "2.0",
+            "effective_start": "2026-01-01",
+            "effective_end": "2026-12-31",
+            "rules": [
+                {
+                    "rule_id": "R-PASS-FIRST",
+                    "category": "place_of_service",
+                    "description": "Matching POS 11 claims pass",
+                    "place_of_service": "11",
+                    "on_match_outcome": "pass",
+                    "priority": 1,
+                },
+                {
+                    "rule_id": "R-FAIL-LATER",
+                    "category": "timely_filing",
+                    "description": "One-day filing limit",
+                    "timely_filing_days": 1,
+                    "on_match_outcome": "fail",
+                    "priority": 2,
+                },
+            ],
+        }
+    )
+    claim = load_claims_csv(FIXTURES / "sample_claims.csv")[0]
+    result = evaluate_claim(policy, claim)
+    assert result.outcome == Outcome.PASS
+    assert [trace.rule_id for trace in result.traces] == ["R-PASS-FIRST"]
+
+
 def test_result_summary_counts_and_failure_reasons(policy, claims):
     summary = summarize_results(evaluate_portfolio(policy, claims))
     assert summary.total_claims == 7
