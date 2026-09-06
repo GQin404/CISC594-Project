@@ -28,11 +28,16 @@
           <textarea id="eval-policy" rows="12" required placeholder="Paste policy JSON or load the sample."></textarea>
         </label>
         <label>
-          Claims CSV
-          <textarea id="eval-claims" rows="12" required placeholder="Paste claims CSV or load the sample."></textarea>
+          Claims CSV or JSON
+          <textarea id="eval-claims" rows="12" required placeholder="Paste claims CSV or a JSON array, or load a sample."></textarea>
+        </label>
+        <label class="filter">
+          Claim IDs to include (blank = all)
+          <input id="eval-subset" type="text" placeholder="e.g. C006 for the 75-day filing example" />
         </label>
         <div class="actions">
-          <button type="button" id="eval-sample" class="secondary">Load V1 sample fixtures</button>
+          <button type="button" id="eval-sample" class="secondary">Load V1 CSV sample</button>
+          <button type="button" id="eval-sample-json" class="secondary">Load V1 JSON sample</button>
           <button type="submit">Run evaluation</button>
           <button type="button" id="eval-export" class="secondary" disabled>Download CSV</button>
         </div>
@@ -65,11 +70,16 @@
           <textarea id="cmp-proposed" rows="10" required></textarea>
         </label>
         <label>
-          Claims CSV
+          Claims CSV or JSON
           <textarea id="cmp-claims" rows="10" required></textarea>
         </label>
+        <label class="filter">
+          Claim IDs to include (blank = all)
+          <input id="cmp-subset" type="text" placeholder="e.g. C006, C007" />
+        </label>
         <div class="actions">
-          <button type="button" id="cmp-sample" class="secondary">Load V1/V2 sample fixtures</button>
+          <button type="button" id="cmp-sample" class="secondary">Load V1/V2 CSV sample</button>
+          <button type="button" id="cmp-sample-json" class="secondary">Load V1/V2 JSON sample</button>
           <button type="submit">Run comparison</button>
         </div>
       </form>

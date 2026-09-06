@@ -1,7 +1,7 @@
 # Change Control Process — Payer Policy Change Impact Simulator
 
 ## Version control
-- Public GitHub repository with instructor access: https://github.com/GQin404/CISC594-Project
+- GitHub repository with instructor access: https://github.com/GQin404/CISC594-Project
 - `main` is the integration baseline (releasable history only). It is the GitHub default branch (the assignment's `master` equivalent).
 - All new development happens on a branch other than `main`. Branch names use `feat/`, `fix/`, `docs/`, or `test/` plus a short description.
 - Pull requests are the only way code enters `main`.
