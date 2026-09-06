@@ -35,10 +35,10 @@ set PYTHONPATH=src
 python scripts/run_v1_system_tests.py  # 18 V1 system-test checks (17 on the v1.0 tag)
 python scripts/run_system_tests.py     # 17 V2 system-test checks
 ```
-The `v1.0` tag contains the 17-check pack used as the Version 1 release gate. After CR-003, `main` adds V1-14 (incomplete rules), for 18 checks. The `v2.0` tag is the Version 2 release gate (`pytest` 18; V2 pack 17/17). `main` is ahead of `v2.0` with closeout UI work (`pytest` 36).
+The `v1.0` tag contains the 17-check pack used as the Version 1 release gate. After CR-003, `main` adds V1-14 (incomplete rules), for 18 checks. The `v2.0` tag is the Version 2 release gate (`pytest` 18; V2 pack 17/17). Post-`v2.0` closeout work on `feat/ui-closeout` adds UI proposal alignment and extra tests (`pytest` 36) without a new version tag.
 
 ## Change control
-All development through `v2.0` happened on feature branches and entered `main` through pull requests. A tested closeout commit after `v2.0` is on `main` and is not a new version tag. See `docs/CHANGE_CONTROL.md`.
+All development happens on feature branches and enters `main` through pull requests. Releases are annotated tags `v1.0` and `v2.0`. Post-`v2.0` closeout work is on `feat/ui-closeout` and is not a new version tag. See `docs/CHANGE_CONTROL.md`.
 
 ## Repository documents
 - `Project Proposal.md` (Markdown only; submission binaries are outside this repo)
