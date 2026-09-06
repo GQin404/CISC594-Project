@@ -5,7 +5,7 @@
 - `main` is the integration baseline (releasable history only). It is the GitHub default branch (the assignment's `master` equivalent).
 - All new development happens on a branch other than `main`. Branch names use `feat/`, `fix/`, `docs/`, or `test/` plus a short description.
 - Pull requests are the only way code enters `main`.
-- After `v2.0`, further working-baseline changes still use a feature branch and pull request. They do not create a new version tag. Checkout `v2.0` for the Version 2 release gate; checkout `main` after that pull request merges for the current working baseline.
+- After `v2.0`, further working-baseline changes still use a feature branch and pull request. They do not create a new version tag. Checkout `v2.0` for the Version 2 release gate; checkout `main` for the current working baseline.
 - Annotated tags mark each released version: `v1.0`, `v2.0`.
 
 ## Change workflow
