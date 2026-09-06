@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 from ppc_simulator.claims_io import load_claims_csv
 from ppc_simulator.compare import attribute_change, compare_claim, compare_portfolio
 from ppc_simulator.engine import evaluate_claim
-from ppc_simulator.models import Outcome, Policy
+from ppc_simulator.models import Claim, Outcome, Policy
 
 
 FIXTURES = ROOT / "data" / "fixtures"
@@ -80,3 +80,120 @@ def test_attribute_change_ignores_unchanged_outcomes(baseline, proposed, claims)
     assert left.outcome == right.outcome == Outcome.PASS
     assert attributed == []
     assert notes == []
+
+
+def _policy(**overrides) -> Policy:
+    payload = {
+        "policy_id": "POL-TRANS",
+        "payer_name": "Acme Health",
+        "version": "1.0",
+        "effective_start": "2026-01-01",
+        "effective_end": "2026-12-31",
+        "rules": [],
+    }
+    payload.update(overrides)
+    return Policy.model_validate(payload)
+
+
+def _claim(**overrides) -> Claim:
+    payload = {
+        "claim_id": "T001",
+        "payer": "Acme Health",
+        "service_date": "2026-01-10",
+        "submission_date": "2026-04-15",
+        "procedure_code": "99213",
+        "diagnosis_code": "J06.9",
+        "modifier": None,
+        "place_of_service": "11",
+        "authorization_on_file": True,
+    }
+    payload.update(overrides)
+    return Claim.model_validate(payload)
+
+
+TF_90 = {
+    "rule_id": "R-TF-90",
+    "category": "timely_filing",
+    "description": "Filing window",
+    "timely_filing_days": 90,
+    "on_match_outcome": "fail",
+    "priority": 10,
+}
+
+
+def test_fail_to_pass_when_filing_window_widens():
+    baseline = _policy(rules=[TF_90])
+    proposed = _policy(version="2.0", rules=[{**TF_90, "timely_filing_days": 120}])
+    comparison = compare_claim(baseline, proposed, _claim())
+    assert comparison.transition == "fail->pass"
+    assert "R-TF-90" in comparison.attributed_rule_ids
+
+
+def test_fail_to_manual_review_when_higher_priority_pos_rule_added():
+    pos = {
+        "rule_id": "R-POS-11",
+        "category": "place_of_service",
+        "description": "POS 11 review",
+        "place_of_service": "11",
+        "on_match_outcome": "manual_review",
+        "priority": 1,
+    }
+    comparison = compare_claim(
+        _policy(rules=[TF_90]),
+        _policy(version="2.0", rules=[pos, TF_90]),
+        _claim(),
+    )
+    assert comparison.transition == "fail->manual_review"
+    assert "R-POS-11" in comparison.attributed_rule_ids
+
+
+def test_manual_review_to_pass_when_claim_enters_effective_range():
+    comparison = compare_claim(
+        _policy(effective_start="2026-06-01", effective_end="2026-12-31"),
+        _policy(version="2.0"),
+        _claim(submission_date="2026-01-12"),
+    )
+    assert comparison.transition == "manual_review->pass"
+
+
+def test_manual_review_to_fail_when_in_range_policy_applies_timely_filing():
+    comparison = compare_claim(
+        _policy(effective_start="2026-06-01", effective_end="2026-12-31"),
+        _policy(version="2.0", rules=[TF_90]),
+        _claim(),
+    )
+    assert comparison.transition == "manual_review->fail"
+    assert "R-TF-90" in comparison.attributed_rule_ids
+
+
+def test_precedence_change_swaps_fail_and_manual_review():
+    auth = {
+        "rule_id": "R-AUTH-27447",
+        "category": "authorization",
+        "description": "Auth required",
+        "procedure_code": "27447",
+        "authorization_required": True,
+        "on_match_outcome": "fail",
+        "priority": 10,
+    }
+    pos = {
+        "rule_id": "R-POS-22",
+        "category": "place_of_service",
+        "description": "POS 22 review",
+        "place_of_service": "22",
+        "on_match_outcome": "manual_review",
+        "priority": 20,
+    }
+    claim = _claim(
+        procedure_code="27447",
+        authorization_on_file=False,
+        place_of_service="22",
+        submission_date="2026-01-12",
+    )
+    comparison = compare_claim(
+        _policy(rules=[auth, pos]),
+        _policy(version="2.0", rules=[{**auth, "priority": 30}, {**pos, "priority": 5}]),
+        claim,
+    )
+    assert comparison.transition == "fail->manual_review"
+    assert "R-POS-22" in comparison.attributed_rule_ids

@@ -21,6 +21,7 @@ ALLOWED_FIXTURES = {
     "sample_policy_v1.json",
     "sample_policy_v2.json",
     "sample_claims.csv",
+    "sample_claims.json",
 }
 
 app = FastAPI(

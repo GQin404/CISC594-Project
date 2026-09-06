@@ -23,4 +23,7 @@ def test_sample_fixtures_are_served_to_the_ui():
     assert claims.status_code == 200
     assert "R-TF-90" in policy.text
     assert "C001" in claims.text
+    json_claims = client.get("/fixtures/sample_claims.json")
+    assert json_claims.status_code == 200
+    assert json_claims.json()[0]["claim_id"] == "C001"
     assert client.get("/fixtures/not-a-file.json").status_code == 404
