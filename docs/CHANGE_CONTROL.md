@@ -4,7 +4,7 @@
 - GitHub repository with instructor access: https://github.com/GQin404/CISC594-Project
 - `main` is the integration baseline (releasable history only). It is the GitHub default branch (the assignment's `master` equivalent).
 - All new development happens on a branch other than `main`. Branch names use `feat/`, `fix/`, `docs/`, or `test/` plus a short description.
-- Pull requests are the only way code enters `main`.
+- Pull requests are the way code entered `main` through the `v2.0` release. After that tag, a single tested closeout commit was added on `main` (UI proposal alignment and extra tests). That commit is not a new version.
 - Annotated tags mark each released version: `v1.0`, `v2.0`.
 
 ## Change workflow
@@ -31,6 +31,8 @@ Because this is a single-developer project, the author also performs the PR revi
 | V2 | `scripts/run_system_tests.py` | `docs/V2_SYSTEM_TEST_EVIDENCE.md` | `v2.0` |
 
 A version is tagged only after its system-test pack passes in full and the evidence file is on `main`. Version 2 development does not start until `v1.0` exists.
+
+After `v2.0`, `main` may move ahead of the tag without a new release number. Checkout `v2.0` for the Version 2 gate; checkout `main` for the current working baseline.
 
 ## Scope changes
 Any change that adds a rule category, alters version boundaries, drops a proposed component, or expands V2 scope requires a short change-request note covering schedule, risk, design, and test impact before implementation.
