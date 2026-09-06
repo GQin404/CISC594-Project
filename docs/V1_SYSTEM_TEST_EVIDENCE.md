@@ -1,11 +1,10 @@
 # V1 System Test Evidence
 
 **Execution date:** 2026-09-05
-**Build under test:** `v1.0-3-g3191816` (Version 1 baseline)
+**Build under test:** `main` after CR-003 (includes V1-14)
 **Result:** 18/18 checks passed
 
-This pack exercises Version 1 capabilities only, so it can be executed against the
-`v1.0` release with no Version 2 code present.
+This pack on `main` includes V1-14 (incomplete rules). The `v1.0` tag still contains the original 17-check pack and does not include that behavior.
 
 | ID | Scenario | Result | Evidence |
 |----|----------|--------|----------|
