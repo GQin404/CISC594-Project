@@ -17,7 +17,8 @@ Then open http://127.0.0.1:8000 for the browser UI (Evaluate and Compare). API d
 
 ## Browser UI
 - `/` — Version 1 evaluation and Version 2 comparison
-- Load the sample fixtures from the page, or paste policy JSON and claims CSV
+- Load CSV or JSON sample fixtures, or paste policy JSON and claims as CSV or a JSON array
+- Optional claim-ID subset (blank = entire file)
 - JSON API used by the page and by system tests:
   - `POST /v1/evaluate`
   - `POST /v1/evaluate/export`
@@ -29,7 +30,7 @@ Then open http://127.0.0.1:8000 for the browser UI (Evaluate and Compare). API d
 
 ## Testing
 ```bash
-pytest                                 # 17 unit and integration tests
+pytest                                 # 36 unit and integration tests
 set PYTHONPATH=src
 python scripts/run_v1_system_tests.py  # 18 V1 system-test checks (17 on the v1.0 tag)
 python scripts/run_system_tests.py     # 17 V2 system-test checks
